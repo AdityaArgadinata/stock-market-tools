@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import StockData from './components/StockData'
 import './App.css'
+import RunningTradeData from './components/RunningTradeData'
 
-const BEARER_TOKEN = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjU3MDc0NjI3LTg4MWItNDQzZC04OTcyLTdmMmMzOTNlMzYyOSIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZSI6IkFkaXR5YUFyZ2FkaW5hdGEiLCJlbWEiOiJhZGl0ZGV2ZWxvcEBnbWFpbC5jb20iLCJmdWwiOiJBZGl0eWEgQXJnYWRpbmF0YSIsInNlcyI6ImxCdkVRd0NiR1doM3Vib2oiLCJkdmMiOiI2NzhjZjAxZGJiYzE2N2U5ZTI1ZmRhZmJkOTViYjM4OCIsInVpZCI6MzgzMDU3NSwiY291IjoiSUQifSwiZXhwIjoxNzY2Mzc5NDg0LCJpYXQiOjE3NjYyOTMwODQsImlzcyI6IlNUT0NLQklUIiwianRpIjoiNzliZWJlZDMtMTc0NC00NDdjLWFjMjYtNzg3NmQ1YjkwMjMxIiwibmJmIjoxNzY2MjkzMDg0LCJ2ZXIiOiJ2MSJ9.uMrEsokSwaGl9HFJXN1Hy0bA8_lmOQ4DAgGXAuulS3m7UbNVUV7HKwMVG0ULqtPzVhnQ0tDSw7peE_gIK_2vheBVaNPfRD5N8ON1hrzEehtlDuUXi9JqzgpR1aHU5uOIObIDvKNYis8U7-Ixek0Re-kQaTcyRUuk3Hf96Vx5g8_s6cu3q5mESoS33ijbeVD-rFr8XwpF8h740EESbirGI7cijY9D3TvvndJ7RCUUVvPry4arjgh7FhW6GLsxYdvfDOVllW50BaysnbZ23kdqIFn5zsUMoLSupMnTZgIvEPdSt8jIleL5UbDnuepA2eGQqr2k240kmyZRuovbRoLK3g'
+
+const BEARER_TOKEN = import.meta.env.VITE_STOCKBIT_BEARER_TOKEN
 
 function App() {
   const [inputSymbol, setInputSymbol] = useState('SUPA')
@@ -14,13 +16,12 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <div className="app-header">
-        <h1>Stock Tools</h1>
-
-        <form onSubmit={handleSubmit} className="symbol-form">
-          <div className="symbol-form-group">
-            <label htmlFor="symbol">Kode Saham</label>
+    <div className="max-w-7xl mx-auto pt-8 px-4">
+      <div className="bg-white rounded-lg shadow-md p-8 mb-6">
+        <h1 className="text-2xl font-bold mb-4">Anjay ngetrek</h1>
+        <form onSubmit={handleSubmit} className="max-w-xs flex justify-end flex-col gap-3">
+          <div className="flex-1 flex flex-col gap-2">
+            <label htmlFor="symbol" className="text-sm font-medium text-gray-600">Ticker</label>
             <input
               id="symbol"
               type="text"
@@ -28,19 +29,15 @@ function App() {
               onChange={(e) => setInputSymbol(e.target.value.toUpperCase())}
               placeholder="Masukkan kode saham (contoh: SUPA)"
               maxLength={10}
+              className="p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             />
           </div>
-          <button type="submit" className="submit-button">Cari</button>
+          <button type="submit" className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cari</button>
         </form>
       </div>
-      <div className="content-container">
+      <div className="flex gap-6">
         <StockData symbol={symbol} token={BEARER_TOKEN} />
-        <div>
-          <p>running trade dan volume spike</p>
-        </div>
-        <div>
-          <p>antrian cabut pasang order book</p>
-        </div>
+        <RunningTradeData symbol={symbol} token={BEARER_TOKEN} />
       </div>
     </div>
   )
