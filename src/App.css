@@ -373,12 +373,12 @@
   color: #9c27b0;
 }
 
-.buy-value {
+.table-container .buy-value {
   color: #34a853;
   font-weight: 500;
 }
 
-.sell-value {
+.table-container .sell-value {
   color: #ea4335;
   font-weight: 500;
 }
