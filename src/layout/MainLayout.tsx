@@ -1,4 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useStockSymbol } from "../context/StockSymbolContext";
+
 import "../App.css";
 import {
   BarChart2,
@@ -12,6 +15,14 @@ import {
 } from "lucide-react";
 
 export default function MainLayout() {
+  const { symbol, setSymbol } = useStockSymbol();
+  const [inputSymbol, setInputSymbol] = useState(symbol);
+
+  // Sync input dengan symbol global
+  useEffect(() => {
+    setInputSymbol(symbol);
+  }, [symbol]);
+
   return (
     <>
       {/* Sidebar */}
@@ -23,24 +34,41 @@ export default function MainLayout() {
           </div>
           <div>
             <p className="font-semibold leading-none">Stockcoy</p>
-            <span className="text-xs text-gray-500">Identifier Market</span>
+            <span className="text-xs text-gray-500">
+              Identifier Market
+            </span>
           </div>
         </div>
 
         {/* Search */}
         <div className="px-4 mb-4">
-          <div className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!inputSymbol.trim()) return;
+              setSymbol(inputSymbol.toUpperCase());
+            }}
+            className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
+          >
             <Search size={16} className="text-gray-400" />
             <input
-              placeholder="Search..."
+              value={inputSymbol}
+              onChange={(e) =>
+                setInputSymbol(e.target.value.toUpperCase())
+              }
+              placeholder="Search ticker..."
               className="bg-transparent outline-none text-sm w-full"
             />
-          </div>
+          </form>
         </div>
 
         {/* Menu */}
         <nav className="flex-1 px-2 space-y-1">
-          <MenuLink to="/" icon={<ChartCandlestick size={18} />} label="Stock Summary" />
+          <MenuLink
+            to="/"
+            icon={<ChartCandlestick size={18} />}
+            label="Stock Summary"
+          />
           <MenuLink
             to="/volume"
             icon={<BarChart2 size={18} />}
@@ -51,7 +79,6 @@ export default function MainLayout() {
             icon={<ListStart size={18} />}
             label="Orderbook & Queue"
           />
-
           <MenuLink
             to="/notifications"
             icon={<Bell size={18} />}
