@@ -1,7 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import "../App.css";
 import {
-  Home,
   BarChart2,
   Bell,
   PieChart,
