@@ -15,7 +15,7 @@ export function StockSymbolProvider({
   children: React.ReactNode;
 }) {
   const [symbol, setSymbol] = useState<string>(() => {
-    return localStorage.getItem("stock_symbol") || "SUPA";
+    return localStorage.getItem("stock_symbol") || "BBCA";
   });
 
   useEffect(() => {

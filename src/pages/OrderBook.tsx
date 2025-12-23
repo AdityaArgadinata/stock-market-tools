@@ -7,8 +7,7 @@ export default function OrderBook() {
   const { symbol } = useStockSymbol();
 
   return (
-    <div>
-      <p>teest - {symbol}</p>
+    <div className="pt-8 px-4">
       <OrderBookData symbol={symbol} token={BEARER_TOKEN} />
     </div>
   );

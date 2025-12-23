@@ -65,22 +65,18 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
 
   return (
     <div className="max-w-full mx-auto">
-      <h2 className="text-sm font-bold mb-4">
-        Running Trade Data for {symbol}
-      </h2>
-
       <table className="w-full border border-gray-200">
-        <thead className="bg-gray-100">
+        <thead className="bg-gray-100 text-xs">
           <tr>
-            <th className="px-4 py-1 border-b border-gray-200">Time</th>
-            <th className="px-4 py-1 border-b border-gray-200">Action</th>
-            <th className="px-4 py-1 border-b border-gray-200">Code</th>
-            <th className="px-4 py-1 border-b border-gray-200">Price</th>
-            <th className="px-4 py-1 border-b border-gray-200">Change</th>
-            <th className="px-4 py-1 border-b border-gray-200">Lot</th>
-            <th className="px-4 py-1 border-b border-gray-200">Market</th>
-            <th className="px-4 py-1 border-b border-gray-200">Buyer</th>
-            <th className="px-4 py-1 border-b border-gray-200">Seller</th>
+            <th className="px-4 py-2 border-b border-gray-200">Time</th>
+            <th className="px-4 py-2 border-b border-gray-200">Action</th>
+            <th className="px-4 py-2 border-b border-gray-200">Code</th>
+            <th className="px-4 py-2 border-b border-gray-200">Price</th>
+            <th className="px-4 py-2 border-b border-gray-200">Change</th>
+            <th className="px-4 py-2 border-b border-gray-200">Lot</th>
+            <th className="px-4 py-2 border-b border-gray-200">Market</th>
+            <th className="px-4 py-2 border-b border-gray-200">Buyer</th>
+            <th className="px-4 py-2 border-b border-gray-200">Seller</th>
           </tr>
         </thead>
 
