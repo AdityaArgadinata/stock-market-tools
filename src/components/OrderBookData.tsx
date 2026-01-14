@@ -139,7 +139,7 @@ export default function OrderBookData({ symbol, token }: OrderBookProps) {
 
   /* ================= RENDER ================= */
   return (
-    <div className="container mx-auto mt-5">
+    <div className="mx-auto mt-5">
       <div className="">
         <div className="flex gap-4">
           {/* ================= LEFT: ORDER BOOK FULL (Independent) ================= */}

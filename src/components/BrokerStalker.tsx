@@ -443,7 +443,7 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <div className="mx-auto pt-8 px-4">
       <h1 className="text-2xl font-semibold mb-6 text-gray-900">Broker Stalker - Activity Detail</h1>
       
       {/* Filter & Export Controls - Side by Side */}
