@@ -82,16 +82,38 @@ interface ApiResponse {
 }
 
 const BrokerStalker = ({ token }: BrokerStalkerProps) => {
+  // Helper function to get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Helper function to get date N days ago in YYYY-MM-DD format
+  const getDateDaysAgo = (days: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const today = getTodayDate();
+  const thirtyDaysAgo = getDateDaysAgo(30);
+
   const [data, setData] = useState<BrokerActivityData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [brokerCode, setBrokerCode] = useState('AK');
-  const [fromDate, setFromDate] = useState('2026-01-09');
-  const [toDate, setToDate] = useState('2026-01-09');
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
   
   // Export states
-  const [exportFromDate, setExportFromDate] = useState('2026-01-01');
-  const [exportToDate, setExportToDate] = useState('2026-01-09');
+  const [exportFromDate, setExportFromDate] = useState(thirtyDaysAgo);
+  const [exportToDate, setExportToDate] = useState(today);
   const [isExporting, setIsExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [exportStatus, setExportStatus] = useState('');
@@ -421,220 +443,224 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Broker Stalker - Activity Detail</h1>
+    <div className="container mx-auto p-6 max-w-7xl">
+      <h1 className="text-2xl font-semibold mb-6 text-gray-900">Broker Stalker - Activity Detail</h1>
       
-      {/* Filter Controls */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Filters</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Broker Code</label>
-            <input
-              type="text"
-              value={brokerCode}
-              onChange={(e) => setBrokerCode(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="AK"
-            />
+      {/* Filter & Export Controls - Side by Side */}
+      <div className="flex gap-6 mb-6">
+        {/* Filter Controls */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-gray-900">Filters</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Broker Code</label>
+              <input
+                type="text"
+                value={brokerCode}
+                onChange={(e) => setBrokerCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === 'Enter' && fetchBrokerActivity()}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                placeholder="AK"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">From Date</label>
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">To Date</label>
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">From Date</label>
-            <input
-              type="date"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">To Date</label>
-            <input
-              type="date"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
+          <button
+            onClick={fetchBrokerActivity}
+            className="mt-4 px-6 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors shadow-sm"
+          >
+            Fetch Data
+          </button>
         </div>
-        <button
-          onClick={fetchBrokerActivity}
-          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
-          Fetch Data
-        </button>
-      </div>
 
-      {/* Export to Excel Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Export to Excel</h2>
-        <p className="text-sm text-gray-600 mb-4">Export data per hari sampai maksimal 2 tahun</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Export From Date</label>
-            <input
-              type="date"
-              value={exportFromDate}
-              onChange={(e) => setExportFromDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              disabled={isExporting}
-            />
+        {/* Export to Excel Section */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex-1">
+          <h2 className="text-base font-semibold mb-1 text-gray-900">Export to Excel</h2>
+          <p className="text-xs text-gray-500 mb-4">Max 2 tahun per export</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">From Date</label>
+              <input
+                type="date"
+                value={exportFromDate}
+                onChange={(e) => setExportFromDate(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
+                disabled={isExporting}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">To Date</label>
+              <input
+                type="date"
+                value={exportToDate}
+                onChange={(e) => setExportToDate(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
+                disabled={isExporting}
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Export To Date</label>
-            <input
-              type="date"
-              value={exportToDate}
-              onChange={(e) => setExportToDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              disabled={isExporting}
-            />
-          </div>
+          
+          <button
+            onClick={exportToExcel}
+            disabled={isExporting}
+            className={`w-full px-6 py-2.5 text-sm font-medium rounded-lg transition-colors shadow-sm ${
+              isExporting 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700'
+            }`}
+          >
+            {isExporting ? 'Exporting...' : 'Export to Excel'}
+          </button>
+          
+          {isExporting && (
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-medium text-gray-700">{exportStatus}</span>
+                <span className="text-xs font-medium text-gray-700">{exportProgress}%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${exportProgress}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
         </div>
-        
-        <button
-          onClick={exportToExcel}
-          disabled={isExporting}
-          className={`px-6 py-2 rounded-md text-white ${
-            isExporting 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-green-500 hover:bg-green-600'
-          }`}
-        >
-          {isExporting ? 'Exporting...' : 'Export to Excel'}
-        </button>
-        
-        {isExporting && (
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">{exportStatus}</span>
-              <span className="text-sm font-medium">{exportProgress}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-4">
-              <div
-                className="bg-blue-500 h-4 rounded-full transition-all duration-300"
-                style={{ width: `${exportProgress}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Bandar Detector Summary */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Bandar Detector Summary</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Total Value</div>
-            <div className="text-lg font-bold">{formatCurrency(data.bandar_detector.value)}</div>
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+        <h2 className="text-base font-semibold mb-4 text-gray-900">Bandar Detector Summary</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Total Value</div>
+            <div className="text-base font-semibold text-gray-900">{formatCurrency(data.bandar_detector.value)}</div>
           </div>
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Total Volume</div>
-            <div className="text-lg font-bold">{formatNumber(data.bandar_detector.volume)}</div>
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Total Volume</div>
+            <div className="text-base font-semibold text-gray-900">{formatNumber(data.bandar_detector.volume)}</div>
           </div>
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Total Buyers</div>
-            <div className="text-lg font-bold">{data.bandar_detector.total_buyer}</div>
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Total Buyers</div>
+            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.total_buyer}</div>
           </div>
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Total Sellers</div>
-            <div className="text-lg font-bold">{data.bandar_detector.total_seller}</div>
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Total Sellers</div>
+            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.total_seller}</div>
           </div>
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Average</div>
-            <div className="text-lg font-bold">{formatNumber(data.bandar_detector.average)}</div>
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Average</div>
+            <div className="text-base font-semibold text-gray-900">{formatNumber(data.bandar_detector.average)}</div>
           </div>
-          <div className="border p-4 rounded">
-            <div className="text-sm text-gray-600">Broker AccDist</div>
-            <div className="text-lg font-bold">{data.bandar_detector.broker_accdist}</div>
+          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="text-xs text-gray-500 mb-1">Broker AccDist</div>
+            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.broker_accdist}</div>
           </div>
         </div>
 
         <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-3">Top Metrics</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="border p-4 rounded">
-              <h4 className="font-semibold mb-2">Top 1</h4>
-              <p className="text-sm">Amount: {formatCurrency(data.bandar_detector.top1.amount)}</p>
-              <p className="text-sm">Volume: {formatNumber(data.bandar_detector.top1.vol)}</p>
-              <p className="text-sm">Percent: {data.bandar_detector.top1.percent.toFixed(2)}%</p>
-              <p className="text-sm">AccDist: {data.bandar_detector.top1.accdist}</p>
+          <h3 className="text-base font-semibold mb-3 text-gray-900">Top Metrics</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 1</h4>
+              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top1.amount)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top1.vol)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top1.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top1.accdist}</span></p>
             </div>
-            <div className="border p-4 rounded">
-              <h4 className="font-semibold mb-2">Top 3</h4>
-              <p className="text-sm">Amount: {formatCurrency(data.bandar_detector.top3.amount)}</p>
-              <p className="text-sm">Volume: {formatNumber(data.bandar_detector.top3.vol)}</p>
-              <p className="text-sm">Percent: {data.bandar_detector.top3.percent.toFixed(2)}%</p>
-              <p className="text-sm">AccDist: {data.bandar_detector.top3.accdist}</p>
+            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 3</h4>
+              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top3.amount)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top3.vol)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top3.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top3.accdist}</span></p>
             </div>
-            <div className="border p-4 rounded">
-              <h4 className="font-semibold mb-2">Top 5</h4>
-              <p className="text-sm">Amount: {formatCurrency(data.bandar_detector.top5.amount)}</p>
-              <p className="text-sm">Volume: {formatNumber(data.bandar_detector.top5.vol)}</p>
-              <p className="text-sm">Percent: {data.bandar_detector.top5.percent.toFixed(2)}%</p>
-              <p className="text-sm">AccDist: {data.bandar_detector.top5.accdist}</p>
+            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 5</h4>
+              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top5.amount)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top5.vol)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top5.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top5.accdist}</span></p>
             </div>
-            <div className="border p-4 rounded">
-              <h4 className="font-semibold mb-2">Top 10</h4>
-              <p className="text-sm">Amount: {formatCurrency(data.bandar_detector.top10.amount)}</p>
-              <p className="text-sm">Volume: {formatNumber(data.bandar_detector.top10.vol)}</p>
-              <p className="text-sm">Percent: {data.bandar_detector.top10.percent.toFixed(2)}%</p>
-              <p className="text-sm">AccDist: {data.bandar_detector.top10.accdist}</p>
+            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 10</h4>
+              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top10.amount)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top10.vol)}</span></p>
+              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top10.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top10.accdist}</span></p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Brokers Buy & Sell Side by Side */}
-      <div className="flex gap-6">
+      <div className="flex gap-4">
         {/* Brokers Buy - Left */}
-        <div className="bg-white rounded-lg shadow-md p-6 flex-1">
-          <h2 className="text-2xl font-semibold mb-4 text-green-600">Brokers Buy</h2>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-green-600">Brokers Buy</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Stock Code
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Buy Lot
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Buy Value
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Avg Price
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {data.broker_summary.brokers_buy.map((broker, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-4 py-4 whitespace-nowrap font-semibold">
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">
                       {broker.netbs_stock_code}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-700 border border-blue-200">
                         {broker.type}
                       </span>
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatNumber(broker.blot)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatCurrency(broker.bval)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatNumber(broker.netbs_buy_avg_price)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                       {broker.netbs_date}
                     </td>
                   </tr>
@@ -645,53 +671,53 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
         </div>
 
         {/* Brokers Sell - Right */}
-        <div className="bg-white rounded-lg shadow-md p-6 flex-1">
-          <h2 className="text-2xl font-semibold mb-4 text-red-600">Brokers Sell</h2>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-red-600">Brokers Sell</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Stock Code
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Sell Lot
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Sell Value
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Avg Price
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {data.broker_summary.brokers_sell.map((broker, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-4 py-4 whitespace-nowrap font-semibold">
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">
                       {broker.netbs_stock_code}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs rounded bg-orange-100 text-orange-800">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-orange-50 text-orange-700 border border-orange-200">
                         {broker.type}
                       </span>
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatNumber(broker.slot)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatCurrency(broker.sval)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {formatNumber(broker.netbs_sell_avg_price)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                       {broker.netbs_date}
                     </td>
                   </tr>
