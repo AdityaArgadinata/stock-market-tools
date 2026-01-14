@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import StockDetailData from "./StockDetailData";
 interface StockDataProps {
   symbol: string;
   token: string;
@@ -282,7 +282,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
   }
 
   return (
-    <div className="stock-data bg-white p-4 rounded-md shadow-md border border-gray-200">
+    <div className="w-md stock-data bg-white p-4 rounded-md shadow-md border border-gray-200">
       <div className="stock-data-filters flex flex-col gap-2 mb-4">
         <div className="date-picker-group flex justify-start items-center gap-2">
           <div className="date-input-group flex flex-col gap-1">
@@ -347,7 +347,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
       </div>
 
       {tableRows.length === 0 ? (
-        <div className="empty-state flex justify-center items-center h-screen">
+        <div className="w-md flex justify-center items-center mt-52">
           <div>Tidak ada data tersedia</div>
         </div>
       ) : (

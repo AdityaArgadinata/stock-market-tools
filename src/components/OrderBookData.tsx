@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, Fragment } from "react";
+import { useEffect, useMemo, useState } from "react";
 import RunningTradeData from "./RunningTradeData";
 
 const BEARER_TOKEN = import.meta.env.VITE_STOCKBIT_BEARER_TOKEN;
@@ -134,122 +134,164 @@ export default function OrderBookData({ symbol, token }: OrderBookProps) {
 
   /* ================= RENDER ================= */
   return (
-    <div className="p-4">
-      <h2 className="font-bold mb-3">
-        Order Book — {symbol} | Open {data.open}
-      </h2>
+    <div className="container mx-auto p-4">
+      <h1 className="text-xl font-bold mb-4">Order Book — {symbol} <span className="text-gray-500 text-base">| Open {data.open}</span></h1>
       <div className="">
         <div className="flex gap-4">
           {/* ================= LEFT: ORDER BOOK FULL (Independent) ================= */}
-          <div className="orderbook-left">
-            <table className="text-sm border border-gray-300 w-sm table-fixed">
-              <thead>
-                <tr className="bg-gray-100 text-center font-semibold">
-                  <th className="w-8 px-0.5 py-0.5">Freq</th>
-                  <th className="w-12 px-0.5 py-0.5">Lot</th>
-                  <th className="w-12 px-0.5 py-0.5">Bid</th>
-                  <th className="w-12 px-0.5 py-0.5">Offer</th>
-                  <th className="w-12 px-0.5 py-0.5">Lot</th>
-                  <th className="w-8 px-0.5 py-0.5">Freq</th>
-                </tr>
-              </thead>
-              <tbody className="text-xs">
+          <div className="orderbook-left bg-white rounded-lg shadow-md p-3">
+            <h3 className="text-sm font-semibold mb-2">Full Order Book</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr className="text-center">
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Freq</th>
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Lot</th>
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Bid</th>
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Offer</th>
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Lot</th>
+                    <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Freq</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
                 {rows.map((row, index) => (
                   <OrderBookRowItem key={index} row={row} open={data.open} />
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
 
           {/* ================= RIGHT: TOP 3 + QUEUE TREE (Independent) ================= */}
-          <div className="orderbook-right">
-            <table className="text-sm border border-gray-300 w-lg">
-              <thead>
-                <tr className="bg-gray-100 text-center font-semibold">
-                  <th colSpan={8} className="px-0.5 py-0.5">TOP 3 PRICE + ORDER QUEUE</th>
-                </tr>
-              </thead>
-              <tbody className="text-xs">
+          <div className="orderbook-right flex flex-col gap-4">
+            {/* ===== TABLE 1: PRICE OVERVIEW (6 columns, clean) ===== */}
+            <div className="bg-white rounded-lg shadow-md p-3">
+              <h3 className="text-sm font-semibold mb-2">Top 3 Price Overview</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr className="text-center">
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Bid Freq</th>
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Bid Lot</th>
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Bid Price</th>
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Offer Price</th>
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Offer Lot</th>
+                      <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Offer Freq</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                  {rows.slice(0, 3).map((row, index) => {
+                    const getPriceColor = (price?: number) => {
+                      if (!price) return "text-gray-500";
+                      const open = data?.open ?? 0;
+                      if (price === open) return "text-yellow-600";
+                      return price < open ? "text-red-600" : "text-green-600";
+                    };
+
+                    return (
+                      <tr key={index} className="text-center hover:bg-gray-50">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs">{row.bid?.que_num ?? "-"}</td>
+                        <td className="px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">{row.bid ? (row.bid.volume / 100).toLocaleString() : "-"}</td>
+                        <td className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${getPriceColor(row.bid?.price)}`}>{row.bid?.price ?? "-"}</td>
+                        <td className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${getPriceColor(row.offer?.price)}`}>{row.offer?.price ?? "-"}</td>
+                        <td className="px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">{row.offer ? (row.offer.volume / 100).toLocaleString() : "-"}</td>
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs">{row.offer?.que_num ?? "-"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            {/* ===== TABLE 2: ORDER QUEUE DETAIL (8 columns, side-by-side) ===== */}
+            <div className="bg-white rounded-lg shadow-md p-3">
+              <h3 className="text-sm font-semibold mb-2">Order Queue Detail (Top 5 per Price)</h3>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
                 {rows.slice(0, 3).map((row, index) => {
                   const bidQueue = queueMap[`BUY-${row.bid?.price}`] ?? [];
                   const offerQueue = queueMap[`SELL-${row.offer?.price}`] ?? [];
                   const maxQueueLength = Math.max(bidQueue.length, offerQueue.length);
 
+                  if (maxQueueLength === 0) return null;
+
                   return (
-                    <Fragment key={index}>
-                      {/* ===== PRICE ROW (with adjusted colspan for 8 columns) ===== */}
-                      <tr className="border font-semibold text-center bg-gray-50">
-                        <td className="px-0.5 py-0.5">{row.bid?.que_num ?? "-"}</td>
-                        <td className="px-0.5 py-0.5">{row.bid ? (row.bid.volume / 100).toLocaleString() : "-"}</td>
-                        <td colSpan={2} className="px-0.5 py-0.5">{row.bid?.price ?? "-"}</td>
-                        <td colSpan={2} className="px-0.5 py-0.5">{row.offer?.price ?? "-"}</td>
-                        <td className="px-0.5 py-0.5">{row.offer ? (row.offer.volume / 100).toLocaleString() : "-"}</td>
-                        <td className="px-0.5 py-0.5">{row.offer?.que_num ?? "-"}</td>
-                      </tr>
-
-                      {/* ===== PRICE LABEL ===== */}
-                      <tr className="text-center font-semibold bg-gray-100">
-                        <td colSpan={4} className="text-green-600 px-0.5 py-0.5">
+                    <div key={index} className={index > 0 ? "border-t-2 border-gray-300" : ""}>
+                      {/* Price Label */}
+                      <div className="flex bg-gray-50">
+                        <div className="flex-1 text-center py-1.5 font-semibold text-xs text-green-700 border-r border-gray-200">
                           BID @ {row.bid?.price ?? "-"}
-                        </td>
-                        <td colSpan={4} className="text-red-600 px-0.5 py-0.5">
+                        </div>
+                        <div className="flex-1 text-center py-1.5 font-semibold text-xs text-red-700">
                           OFFER @ {row.offer?.price ?? "-"}
-                        </td>
-                      </tr>
+                        </div>
+                      </div>
 
-                      {/* ===== QUEUE HEADER ===== */}
-                      <tr className="bg-gray-100 text-center font-semibold">
-                        <th className="w-8 px-0.5 py-0.5">#</th>
-                        <th className="w-12 px-0.5 py-0.5">Lot</th>
-                        <th className="w-12 px-0.5 py-0.5">Sisa</th>
-                        <th className="w-16 px-0.5 py-0.5">Status</th>
-                        <th className="w-8 px-0.5 py-0.5">#</th>
-                        <th className="w-12 px-0.5 py-0.5">Lot</th>
-                        <th className="w-12 px-0.5 py-0.5">Sisa</th>
-                        <th className="w-16 px-0.5 py-0.5">Status</th>
-                      </tr>
-
-                      {/* ===== QUEUE ROWS (LEFT RIGHT) ===== */}
-                      {Array.from({ length: maxQueueLength }).map((_, queueIndex) => {
-                        const bidItem = bidQueue[queueIndex];
-                        const offerItem = offerQueue[queueIndex];
-
-                        return (
-                          <tr key={queueIndex} className="text-center border-b">
-                            {/* ===== BID ===== */}
-                            <td className="bg-green-50 px-0.5 py-0.5">
-                              {bidItem ? `#${bidItem.queue_number}` : "-"}
-                            </td>
-                            <td className="bg-green-50 px-0.5 py-0.5">
-                              {bidItem ? bidItem.lot.toLocaleString() : "-"}
-                            </td>
-                            <td className="bg-green-50 px-0.5 py-0.5">
-                              {bidItem ? (bidItem.open).toLocaleString() : "-"}
-                            </td>
-                            <td className="bg-green-50 px-0.5 py-0.5 lowercase">
-                              {bidItem ? bidItem.status.replace("ORDER_STATUS_", "") : "-"}
-                            </td>
-                            {/* ===== OFFER ===== */}
-                            <td className="bg-red-50 px-0.5 py-0.5">
-                              {offerItem ? `#${offerItem.queue_number}` : "-"}
-                            </td>
-                            <td className="bg-red-50 px-0.5 py-0.5">
-                              {offerItem ? offerItem.lot.toLocaleString() : "-"}
-                            </td>
-                            <td className="bg-red-50 px-0.5 py-0.5">
-                              {offerItem ? (offerItem.open).toLocaleString() : "-"}
-                            </td>
-                            <td className="bg-red-50 px-0.5 py-0.5 lowercase">
-                              {offerItem ? offerItem.status.replace("ORDER_STATUS_", "") : "-"}
-                            </td>
+                      {/* Queue Table */}
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr className="text-center">
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">#</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Lot</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Sisa</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-2 py-1.5 border-l border-gray-200 text-[10px] font-medium text-gray-500 uppercase tracking-wider">#</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Lot</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider text-right">Sisa</th>
+                            <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
                           </tr>
-                        );
-                      })}
-                    </Fragment>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {Array.from({ length: maxQueueLength }).map((_, queueIndex) => {
+                            const bidItem = bidQueue[queueIndex];
+                            const offerItem = offerQueue[queueIndex];
+
+                            return (
+                              <tr key={queueIndex} className="text-center hover:bg-gray-50">
+                                {/* ===== BID ===== */}
+                                <td className="bg-green-50/40 px-2 py-1.5 whitespace-nowrap text-xs">
+                                  {bidItem ? `#${bidItem.queue_number}` : "-"}
+                                </td>
+                                <td className="bg-green-50/40 px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">
+                                  {bidItem ? bidItem.lot.toLocaleString() : "-"}
+                                </td>
+                                <td className="bg-green-50/40 px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">
+                                  {bidItem ? (bidItem.open).toLocaleString() : "-"}
+                                </td>
+                                <td className="bg-green-50/40 px-2 py-1.5 whitespace-nowrap">
+                                  {bidItem ? (
+                                    <span className="px-1.5 py-0.5 text-[10px] rounded bg-green-100 text-green-800">
+                                      {bidItem.status.replace("ORDER_STATUS_", "")}
+                                    </span>
+                                  ) : "-"}
+                                </td>
+                                {/* ===== OFFER ===== */}
+                                <td className="bg-red-50/40 px-2 py-1.5 whitespace-nowrap border-l border-gray-200 text-xs">
+                                  {offerItem ? `#${offerItem.queue_number}` : "-"}
+                                </td>
+                                <td className="bg-red-50/40 px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">
+                                  {offerItem ? offerItem.lot.toLocaleString() : "-"}
+                                </td>
+                                <td className="bg-red-50/40 px-2 py-1.5 whitespace-nowrap text-right text-xs font-medium">
+                                  {offerItem ? (offerItem.open).toLocaleString() : "-"}
+                                </td>
+                                <td className="bg-red-50/40 px-2 py-1.5 whitespace-nowrap">
+                                  {offerItem ? (
+                                    <span className="px-1.5 py-0.5 text-[10px] rounded bg-red-100 text-red-800">
+                                      {offerItem.status.replace("ORDER_STATUS_", "")}
+                                    </span>
+                                  ) : "-"}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
                            <RunningTradeData symbol={symbol} token={BEARER_TOKEN} />
         </div>
@@ -262,18 +304,18 @@ export default function OrderBookData({ symbol, token }: OrderBookProps) {
 function OrderBookRowItem({ row, open }: { row: OrderBookRow; open: number }) {
   const getColor = (price?: number) => {
     if (!price) return "text-gray-400";
-    if (price === open) return "text-yellow-500";
-    return price < open ? "text-red-500" : "text-green-600";
+    if (price === open) return "text-yellow-600";
+    return price < open ? "text-red-600" : "text-green-600";
   };
 
   return (
-    <tr className="border text-center">
-      <td className="px-0.5 py-0.5">{row.bid?.que_num ?? "-"}</td>
-      <td className="px-0.5 py-0.5">{row.bid ? (row.bid.volume / 100).toLocaleString() : "-"}</td>
-      <td className={`${getColor(row.bid?.price)} px-0.5 py-0.5`}>{row.bid?.price ?? "-"}</td>
-      <td className={`${getColor(row.offer?.price)} px-0.5 py-0.5`}>{row.offer?.price ?? "-"}</td>
-      <td className="px-0.5 py-0.5">{row.offer ? (row.offer.volume / 100).toLocaleString() : "-"}</td>
-      <td className="px-0.5 py-0.5">{row.offer?.que_num ?? "-"}</td>
+    <tr className="text-center hover:bg-gray-50">
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs">{row.bid?.que_num ?? "-"}</td>
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium">{row.bid ? (row.bid.volume / 100).toLocaleString() : "-"}</td>
+      <td className={`${getColor(row.bid?.price)} px-2 py-1.5 whitespace-nowrap text-xs font-semibold`}>{row.bid?.price ?? "-"}</td>
+      <td className={`${getColor(row.offer?.price)} px-2 py-1.5 whitespace-nowrap text-xs font-semibold`}>{row.offer?.price ?? "-"}</td>
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium">{row.offer ? (row.offer.volume / 100).toLocaleString() : "-"}</td>
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs">{row.offer?.que_num ?? "-"}</td>
     </tr>
   );
 }

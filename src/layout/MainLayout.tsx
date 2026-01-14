@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useStockSymbol } from "../context/StockSymbolContext";
 
 import "../App.css";
@@ -17,14 +17,28 @@ import {
 export default function MainLayout() {
   const { symbol, setSymbol } = useStockSymbol();
   const [inputSymbol, setInputSymbol] = useState(symbol);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Sync input dengan symbol global
   useEffect(() => {
     setInputSymbol(symbol);
   }, [symbol]);
 
+  // Keyboard shortcut Cmd+K / Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <div className="font-mono">
+    <div  >
       {/* Sidebar */}
       <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-r flex flex-col">
         {/* Profile */}
@@ -47,15 +61,18 @@ export default function MainLayout() {
               e.preventDefault();
               if (!inputSymbol.trim()) return;
               setSymbol(inputSymbol.toUpperCase());
+              searchInputRef.current?.blur();
             }}
             className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
           >
             <Search size={16} className="text-gray-400" />
             <input
+              ref={searchInputRef}
               value={inputSymbol}
               onChange={(e) =>
                 setInputSymbol(e.target.value.toUpperCase())
               }
+              onFocus={(e) => e.target.select()}
               placeholder="Search ticker..."
               className="bg-transparent outline-none text-sm w-full"
             />

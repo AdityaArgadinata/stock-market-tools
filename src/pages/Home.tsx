@@ -1,23 +1,22 @@
 import StockData from "../components/StockData";
 import TradingViewWidget from "../components/TradingViewChart";
 import { useStockSymbol } from "../context/StockSymbolContext";
+import StockDetailData from "../components/StockDetailData";
 const BEARER_TOKEN = import.meta.env.VITE_STOCKBIT_BEARER_TOKEN;
 
 export default function Home() {
   const { symbol } = useStockSymbol();
   return (
     <div className="pt-8 px-4">
-      <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-        <h1 className="text-2xl font-bold">Stock Summary — {symbol}</h1>
+      <div className="mb-6">
+        <StockDetailData symbol={symbol} token={BEARER_TOKEN} />
       </div>
-
-
 
       <div className="flex gap-6">
         <StockData symbol={symbol} token={BEARER_TOKEN} />
-              <div style={{ height: "600px", width: "100%" }}>
-        <TradingViewWidget symbol={symbol} />
-      </div>
+        <div style={{ height: "800px", width: "100%" }}>
+          <TradingViewWidget symbol={symbol} />
+        </div>
       </div>
     </div>
   );

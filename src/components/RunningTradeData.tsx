@@ -60,79 +60,88 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
     return () => clearInterval(interval);
   }, [symbol, token]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="flex items-center justify-center p-6"><div className="text-lg">Loading...</div></div>;
+  if (error) return <div className="flex items-center justify-center p-6"><div className="text-lg text-red-500">Error: {error}</div></div>;
 
   return (
-    <div className="max-w-full mx-auto">
-      <table className="w-full border border-gray-200">
-        <thead className="bg-gray-100 text-xs">
-          <tr>
-            <th className="px-4 py-2 border-b border-gray-200">Time</th>
-            <th className="px-4 py-2 border-b border-gray-200">Action</th>
-            <th className="px-4 py-2 border-b border-gray-200">Code</th>
-            <th className="px-4 py-2 border-b border-gray-200">Price</th>
-            <th className="px-4 py-2 border-b border-gray-200">Change</th>
-            <th className="px-4 py-2 border-b border-gray-200">Lot</th>
-            <th className="px-4 py-2 border-b border-gray-200">Market</th>
-            <th className="px-4 py-2 border-b border-gray-200">Buyer</th>
-            <th className="px-4 py-2 border-b border-gray-200">Seller</th>
-          </tr>
-        </thead>
-
-        <tbody className="text-xs font-medium text-center">
-          {data.map((item, index) => (
-            <tr
-              key={item.time}
-              className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-            >
-              <td className="border-b border-gray-200">{item.time}</td>
-
-              <td
-                className={`font-bold uppercase border-b border-gray-200 ${
-                  item.action === "buy" ? "text-[#34a853]" : "text-[#ea4335]"
-                }`}
-              >
-                {item.action}
-              </td>
-
-              <td
-                className={`font-bold border-b border-gray-200 ${
-                  item.action === "buy" ? "text-[#34a853]" : "text-[#ea4335]"
-                }`}
-              >
-                {item.code}
-              </td>
-
-              <td className=" border-b border-gray-200">{item.price}</td>
-
-              <td className=" border-b border-gray-200">{item.change}</td>
-
-              <td
-                className={`font-bold border-b border-gray-200 ${
-                  item.action === "buy" ? "text-[#34a853]" : "text-[#ea4335]"
-                }`}
-              >
-                {item.lot}
-              </td>
-
-              <td
-                className={`py-1 border-b border-gray-200 ${
-                  item.market_board === "RG"
-                    ? "text-[#3a3a3a]"
-                    : "text-yellow-500"
-                }`}
-              >
-                {item.market_board}
-              </td>
-
-              <td className="py-1 border-b border-gray-200">{item.buyer}</td>
-
-              <td className="py-1 border-b border-gray-200">{item.seller}</td>
+    <div className="bg-white rounded-lg shadow-md p-3">
+      <h3 className="text-sm font-semibold mb-2">Running Trade</h3>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr className="text-center">
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Time</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Code</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Price</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Change</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Lot</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Market</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Seller</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((item, index) => (
+              <tr
+                key={item.time}
+                className="text-center hover:bg-gray-50"
+              >
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.time}</td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap">
+                  <span
+                    className={`px-1.5 py-0.5 text-[10px] rounded font-semibold uppercase ${
+                      item.action === "buy" 
+                        ? "bg-green-100 text-green-800" 
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {item.action}
+                  </span>
+                </td>
+
+                <td
+                  className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${
+                    item.action === "buy" ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {item.code}
+                </td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium">{item.price}</td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs">{item.change}</td>
+
+                <td
+                  className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${
+                    item.action === "buy" ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {item.lot}
+                </td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap">
+                  <span
+                    className={`px-1.5 py-0.5 text-[10px] rounded font-medium ${
+                      item.market_board === "RG"
+                        ? "bg-gray-100 text-gray-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {item.market_board}
+                  </span>
+                </td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.buyer}</td>
+
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.seller}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
