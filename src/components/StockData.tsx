@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import StockDetailData from "./StockDetailData";
 interface StockDataProps {
   symbol: string;
   token: string;

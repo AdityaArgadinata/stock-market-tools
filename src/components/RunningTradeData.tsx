@@ -83,7 +83,7 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((item, index) => (
+            {data.map((item) => (
               <tr
                 key={item.time}
                 className="text-center hover:bg-gray-50"
