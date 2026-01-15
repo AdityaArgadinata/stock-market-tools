@@ -64,7 +64,7 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
   if (error) return <div className="flex items-center justify-center p-6"><div className="text-lg text-red-500 dark:text-red-400">Error: {error}</div></div>;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 border border-gray-200 dark:border-slate-700">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 border border-gray-200 dark:border-slate-700 max-w-md">
       <h3 className="text-sm font-semibold mb-2 dark:text-slate-100">Running Trade</h3>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">

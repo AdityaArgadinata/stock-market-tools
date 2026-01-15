@@ -49,6 +49,7 @@ function TradingViewWidget({ symbol = "NASDAQ:AAPL" }: TradingViewWidgetProps) {
       style: "1",
       symbol: "IDX:" + symbol,
       theme: isDark ? "dark" : "light",
+      backgroundColor: '#0f172b',
       timezone: "Asia/Jakarta",
       gridColor: "rgba(242, 242, 242, 0.06)",
       watchlist: [],

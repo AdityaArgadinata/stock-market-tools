@@ -335,10 +335,10 @@ function OrderBookRowItem({ row, open }: { row: OrderBookRow; open: number }) {
 
   return (
     <tr className="text-center hover:bg-gray-50 dark:hover:bg-slate-700/30">
-      <td className="px-2 py-1.5 whitespace-nowrap text-xs dark:text-slate-300">
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs dark:text-violet-400">
         {row.bid?.que_num ?? "-"}
       </td>
-      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium dark:text-slate-200">
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium dark:text-slate-300">
         {row.bid ? (row.bid.volume / 100).toLocaleString() : "-"}
       </td>
       <td
@@ -355,10 +355,10 @@ function OrderBookRowItem({ row, open }: { row: OrderBookRow; open: number }) {
       >
         {row.offer?.price ?? "-"}
       </td>
-      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium dark:text-slate-200">
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium dark:text-slate-300">
         {row.offer ? (row.offer.volume / 100).toLocaleString() : "-"}
       </td>
-      <td className="px-2 py-1.5 whitespace-nowrap text-xs dark:text-slate-300">
+      <td className="px-2 py-1.5 whitespace-nowrap text-xs dark:text-violet-400">
         {row.offer?.que_num ?? "-"}
       </td>
     </tr>

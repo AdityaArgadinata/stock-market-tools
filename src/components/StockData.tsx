@@ -263,25 +263,13 @@ const StockData = ({ symbol, token }: StockDataProps) => {
 
   const tableRows = processData();
 
-  if (loading) {
-    return (
-      <div className="loading flex justify-center items-center h-screen">
-        <div className="dark:text-slate-300">Memuat data</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="error flex justify-center items-center h-screen">
-        <div className="error-icon">⚠️</div>
-        <div className="dark:text-slate-300">{error}</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-md stock-data bg-white dark:bg-slate-800 p-4 rounded-md shadow-md border border-gray-200 dark:border-slate-700">
+    <div className="w-md stock-data bg-white dark:bg-slate-800 p-4 rounded-md shadow-md border border-gray-200 dark:border-slate-700 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-slate-800 rounded-md flex justify-center items-center opacity-90">
+          <div className="text-slate-300">Memuat data</div>
+        </div>
+      )}
       <div className="stock-data-filters flex flex-col gap-2 mb-4">
         <div className="date-picker-group flex justify-start items-center gap-2">
           <div className="date-input-group flex flex-col gap-1">
@@ -347,7 +335,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
 
       {tableRows.length === 0 ? (
         <div className="w-md flex justify-center items-center mt-52">
-          <div className="dark:text-slate-300">Tidak ada data tersedia</div>
+          <div className="dark:text-slate-300">{error ? error : "Tidak ada data tersedia"}</div>
         </div>
       ) : (
         <div className="table-container overflow-x-auto">

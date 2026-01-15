@@ -8,12 +8,13 @@ export default function Home() {
   const { symbol } = useStockSymbol();
   return (
     <div className="pt-8 px-4">
-      <div className="mb-6">
-        <StockDetailData symbol={symbol} token={BEARER_TOKEN} />
-      </div>
-
       <div className="flex gap-6">
-        <StockData symbol={symbol} token={BEARER_TOKEN} />
+        <div>
+          <div className="mb-6">
+            <StockDetailData symbol={symbol} token={BEARER_TOKEN} />
+          </div>
+          <StockData symbol={symbol} token={BEARER_TOKEN} />
+        </div>
         <div style={{ height: "800px", width: "100%" }}>
           <TradingViewWidget symbol={symbol} />
         </div>
