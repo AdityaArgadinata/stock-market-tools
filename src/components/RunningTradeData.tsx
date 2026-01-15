@@ -60,42 +60,42 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
     return () => clearInterval(interval);
   }, [symbol, token]);
 
-  if (loading) return <div className="flex items-center justify-center p-6"><div className="text-lg">Loading...</div></div>;
-  if (error) return <div className="flex items-center justify-center p-6"><div className="text-lg text-red-500">Error: {error}</div></div>;
+  if (loading) return <div className="flex items-center justify-center p-6"><div className="text-lg dark:text-slate-300">Loading...</div></div>;
+  if (error) return <div className="flex items-center justify-center p-6"><div className="text-lg text-red-500 dark:text-red-400">Error: {error}</div></div>;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-3">
-      <h3 className="text-sm font-semibold mb-2">Running Trade</h3>
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 border border-gray-200 dark:border-slate-700">
+      <h3 className="text-sm font-semibold mb-2 dark:text-slate-100">Running Trade</h3>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+          <thead className="bg-gray-50 dark:bg-slate-700/50">
             <tr className="text-center">
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Time</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Code</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Change</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Lot</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Market</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
-              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Time</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Action</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Code</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Price</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Change</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Lot</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Market</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Buyer</th>
+              <th className="px-2 py-1.5 text-[10px] font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">Seller</th>
             </tr>
           </thead>
 
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
             {data.map((item) => (
               <tr
                 key={item.time}
-                className="text-center hover:bg-gray-50"
+                className="text-center hover:bg-gray-50 dark:hover:bg-slate-700/30"
               >
-                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.time}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700 dark:text-slate-300">{item.time}</td>
 
                 <td className="px-2 py-1.5 whitespace-nowrap">
                   <span
                     className={`px-1.5 py-0.5 text-[10px] rounded font-semibold uppercase ${
                       item.action === "buy" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
+                        ? "bg-green-100 text-green-800 dark:bg-emerald-900/30 dark:text-emerald-400" 
+                        : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
                     }`}
                   >
                     {item.action}
@@ -104,19 +104,19 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
 
                 <td
                   className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${
-                    item.action === "buy" ? "text-green-600" : "text-red-600"
+                    item.action === "buy" ? "text-green-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {item.code}
                 </td>
 
-                <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium">{item.price}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs font-medium dark:text-slate-200">{item.price}</td>
 
-                <td className="px-2 py-1.5 whitespace-nowrap text-xs">{item.change}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs dark:text-slate-300">{item.change}</td>
 
                 <td
                   className={`px-2 py-1.5 whitespace-nowrap text-xs font-semibold ${
-                    item.action === "buy" ? "text-green-600" : "text-red-600"
+                    item.action === "buy" ? "text-green-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {item.lot}
@@ -126,17 +126,17 @@ const RunningTradeData = ({ symbol, token }: RunningTradeDataProps) => {
                   <span
                     className={`px-1.5 py-0.5 text-[10px] rounded font-medium ${
                       item.market_board === "RG"
-                        ? "bg-gray-100 text-gray-700"
-                        : "bg-yellow-100 text-yellow-700"
+                        ? "bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-slate-300"
+                        : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
                     }`}
                   >
                     {item.market_board}
                   </span>
                 </td>
 
-                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.buyer}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700 dark:text-slate-300">{item.buyer}</td>
 
-                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700">{item.seller}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-700 dark:text-slate-300">{item.seller}</td>
               </tr>
             ))}
           </tbody>

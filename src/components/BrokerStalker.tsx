@@ -444,74 +444,74 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
 
   return (
     <div className="mx-auto pt-8 px-4">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-900">Broker Stalker - Activity Detail</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-slate-100">Broker Stalker - Activity Detail</h1>
       
       {/* Filter & Export Controls - Side by Side */}
       <div className="flex gap-6 mb-6">
         {/* Filter Controls */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex-1">
-          <h2 className="text-base font-semibold mb-4 text-gray-900">Filters</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-6 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-gray-900 dark:text-slate-100">Filters</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">Broker Code</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-300">Broker Code</label>
               <input
                 type="text"
                 value={brokerCode}
                 onChange={(e) => setBrokerCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === 'Enter' && fetchBrokerActivity()}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 focus:border-transparent transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 placeholder="AK"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">From Date</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-300">From Date</label>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 focus:border-transparent transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">To Date</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-300">To Date</label>
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 focus:border-transparent transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
               />
             </div>
           </div>
           <button
             onClick={fetchBrokerActivity}
-            className="mt-4 px-6 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors shadow-sm"
+            className="mt-4 px-6 py-2.5 bg-blue-500 dark:bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-blue-600 dark:hover:bg-emerald-700 active:bg-blue-700 dark:active:bg-emerald-800 transition-colors shadow-sm"
           >
             Fetch Data
           </button>
         </div>
 
         {/* Export to Excel Section */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex-1">
-          <h2 className="text-base font-semibold mb-1 text-gray-900">Export to Excel</h2>
-          <p className="text-xs text-gray-500 mb-4">Max 2 tahun per export</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-6 flex-1">
+          <h2 className="text-base font-semibold mb-1 text-gray-900 dark:text-slate-100">Export to Excel</h2>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mb-4">Max 2 tahun per export</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">From Date</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-300">From Date</label>
               <input
                 type="date"
                 value={exportFromDate}
                 onChange={(e) => setExportFromDate(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-emerald-500 focus:border-transparent transition-all disabled:bg-gray-50 dark:disabled:bg-slate-900 disabled:cursor-not-allowed bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 disabled={isExporting}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">To Date</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-300">To Date</label>
               <input
                 type="date"
                 value={exportToDate}
                 onChange={(e) => setExportToDate(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-emerald-500 focus:border-transparent transition-all disabled:bg-gray-50 dark:disabled:bg-slate-900 disabled:cursor-not-allowed bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 disabled={isExporting}
               />
             </div>
@@ -522,8 +522,8 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
             disabled={isExporting}
             className={`w-full px-6 py-2.5 text-sm font-medium rounded-lg transition-colors shadow-sm ${
               isExporting 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700'
+                ? 'bg-gray-300 dark:bg-slate-600 text-gray-500 dark:text-slate-400 cursor-not-allowed' 
+                : 'bg-green-500 dark:bg-emerald-600 text-white hover:bg-green-600 dark:hover:bg-emerald-700 active:bg-green-700 dark:active:bg-emerald-800'
             }`}
           >
             {isExporting ? 'Exporting...' : 'Export to Excel'}
@@ -532,12 +532,12 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
           {isExporting && (
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-700">{exportStatus}</span>
-                <span className="text-xs font-medium text-gray-700">{exportProgress}%</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-slate-300">{exportStatus}</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-slate-300">{exportProgress}%</span>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                  className="bg-green-500 dark:bg-emerald-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${exportProgress}%` }}
                 ></div>
               </div>
@@ -547,65 +547,65 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
       </div>
 
       {/* Bandar Detector Summary */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
-        <h2 className="text-base font-semibold mb-4 text-gray-900">Bandar Detector Summary</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-6 mb-6">
+        <h2 className="text-base font-semibold mb-4 text-gray-900 dark:text-slate-100">Bandar Detector Summary</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Total Value</div>
-            <div className="text-base font-semibold text-gray-900">{formatCurrency(data.bandar_detector.value)}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Total Value</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{formatCurrency(data.bandar_detector.value)}</div>
           </div>
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Total Volume</div>
-            <div className="text-base font-semibold text-gray-900">{formatNumber(data.bandar_detector.volume)}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Total Volume</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{formatNumber(data.bandar_detector.volume)}</div>
           </div>
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Total Buyers</div>
-            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.total_buyer}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Total Buyers</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{data.bandar_detector.total_buyer}</div>
           </div>
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Total Sellers</div>
-            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.total_seller}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Total Sellers</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{data.bandar_detector.total_seller}</div>
           </div>
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Average</div>
-            <div className="text-base font-semibold text-gray-900">{formatNumber(data.bandar_detector.average)}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Average</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{formatNumber(data.bandar_detector.average)}</div>
           </div>
-          <div className="border border-gray-200 p-4 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
-            <div className="text-xs text-gray-500 mb-1">Broker AccDist</div>
-            <div className="text-base font-semibold text-gray-900">{data.bandar_detector.broker_accdist}</div>
+          <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-gray-50/50 dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Broker AccDist</div>
+            <div className="text-base font-semibold text-gray-900 dark:text-slate-100">{data.bandar_detector.broker_accdist}</div>
           </div>
         </div>
 
         <div className="mt-6">
-          <h3 className="text-base font-semibold mb-3 text-gray-900">Top Metrics</h3>
+          <h3 className="text-base font-semibold mb-3 text-gray-900 dark:text-slate-100">Top Metrics</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
-              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 1</h4>
-              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top1.amount)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top1.vol)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top1.percent.toFixed(2)}%</span></p>
-              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top1.accdist}</span></p>
+            <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-white dark:bg-slate-700/50 hover:shadow-md dark:hover:bg-slate-700 transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-slate-100">Top 1</h4>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Amount: <span className="font-medium text-gray-900 dark:text-slate-200">{formatCurrency(data.bandar_detector.top1.amount)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Volume: <span className="font-medium text-gray-900 dark:text-slate-200">{formatNumber(data.bandar_detector.top1.vol)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Percent: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top1.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400">AccDist: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top1.accdist}</span></p>
             </div>
-            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
-              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 3</h4>
-              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top3.amount)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top3.vol)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top3.percent.toFixed(2)}%</span></p>
-              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top3.accdist}</span></p>
+            <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-white dark:bg-slate-700/50 hover:shadow-md dark:hover:bg-slate-700 transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-slate-100">Top 3</h4>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Amount: <span className="font-medium text-gray-900 dark:text-slate-200">{formatCurrency(data.bandar_detector.top3.amount)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Volume: <span className="font-medium text-gray-900 dark:text-slate-200">{formatNumber(data.bandar_detector.top3.vol)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Percent: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top3.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400">AccDist: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top3.accdist}</span></p>
             </div>
-            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
-              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 5</h4>
-              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top5.amount)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top5.vol)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top5.percent.toFixed(2)}%</span></p>
-              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top5.accdist}</span></p>
+            <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-white dark:bg-slate-700/50 hover:shadow-md dark:hover:bg-slate-700 transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-slate-100">Top 5</h4>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Amount: <span className="font-medium text-gray-900 dark:text-slate-200">{formatCurrency(data.bandar_detector.top5.amount)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Volume: <span className="font-medium text-gray-900 dark:text-slate-200">{formatNumber(data.bandar_detector.top5.vol)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Percent: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top5.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400">AccDist: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top5.accdist}</span></p>
             </div>
-            <div className="border border-gray-200 p-4 rounded-lg bg-white hover:shadow-md transition-shadow">
-              <h4 className="text-sm font-semibold mb-3 text-gray-900">Top 10</h4>
-              <p className="text-xs text-gray-600 mb-1">Amount: <span className="font-medium text-gray-900">{formatCurrency(data.bandar_detector.top10.amount)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Volume: <span className="font-medium text-gray-900">{formatNumber(data.bandar_detector.top10.vol)}</span></p>
-              <p className="text-xs text-gray-600 mb-1">Percent: <span className="font-medium text-gray-900">{data.bandar_detector.top10.percent.toFixed(2)}%</span></p>
-              <p className="text-xs text-gray-600">AccDist: <span className="font-medium text-gray-900">{data.bandar_detector.top10.accdist}</span></p>
+            <div className="border border-gray-200 dark:border-slate-600 p-4 rounded-lg bg-white dark:bg-slate-700/50 hover:shadow-md dark:hover:bg-slate-700 transition-shadow">
+              <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-slate-100">Top 10</h4>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Amount: <span className="font-medium text-gray-900 dark:text-slate-200">{formatCurrency(data.bandar_detector.top10.amount)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Volume: <span className="font-medium text-gray-900 dark:text-slate-200">{formatNumber(data.bandar_detector.top10.vol)}</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Percent: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top10.percent.toFixed(2)}%</span></p>
+              <p className="text-xs text-gray-600 dark:text-slate-400">AccDist: <span className="font-medium text-gray-900 dark:text-slate-200">{data.bandar_detector.top10.accdist}</span></p>
             </div>
           </div>
         </div>
@@ -614,53 +614,53 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
       {/* Brokers Buy & Sell Side by Side */}
       <div className="flex gap-4">
         {/* Brokers Buy - Left */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex-1">
-          <h2 className="text-base font-semibold mb-4 text-green-600">Brokers Buy</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-5 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-green-600 dark:text-emerald-400">Brokers Buy</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-600">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Stock Code
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Buy Lot
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Buy Value
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Avg Price
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-700">
                 {data.broker_summary.brokers_buy.map((broker, index) => (
-                  <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">
+                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-slate-100">
                       {broker.netbs_stock_code}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                         {broker.type}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatNumber(broker.blot)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatCurrency(broker.bval)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatNumber(broker.netbs_buy_avg_price)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500 dark:text-slate-400">
                       {broker.netbs_date}
                     </td>
                   </tr>
@@ -671,53 +671,53 @@ const BrokerStalker = ({ token }: BrokerStalkerProps) => {
         </div>
 
         {/* Brokers Sell - Right */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex-1">
-          <h2 className="text-base font-semibold mb-4 text-red-600">Brokers Sell</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-5 flex-1">
+          <h2 className="text-base font-semibold mb-4 text-red-600 dark:text-red-400">Brokers Sell</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-600">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Stock Code
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Sell Lot
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Sell Value
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Avg Price
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-700">
                 {data.broker_summary.brokers_sell.map((broker, index) => (
-                  <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">
+                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-slate-100">
                       {broker.netbs_stock_code}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-orange-50 text-orange-700 border border-orange-200">
+                      <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
                         {broker.type}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatNumber(broker.slot)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatCurrency(broker.sval)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-slate-300">
                       {formatNumber(broker.netbs_sell_avg_price)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500 dark:text-slate-400">
                       {broker.netbs_date}
                     </td>
                   </tr>

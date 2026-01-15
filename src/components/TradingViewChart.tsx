@@ -1,4 +1,5 @@
 import { useEffect, useRef, memo } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 interface TradingViewWidgetProps {
   symbol: string;
@@ -7,6 +8,7 @@ interface TradingViewWidgetProps {
 function TradingViewWidget({ symbol = "NASDAQ:AAPL" }: TradingViewWidgetProps) {
   const container = useRef<HTMLDivElement | null>(null);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     // Bersihkan seluruh isi container untuk hindari duplikasi chart
@@ -46,7 +48,7 @@ function TradingViewWidget({ symbol = "NASDAQ:AAPL" }: TradingViewWidgetProps) {
       save_image: true,
       style: "1",
       symbol: "IDX:" + symbol,
-      theme: "light",
+      theme: isDark ? "dark" : "light",
       timezone: "Asia/Jakarta",
       gridColor: "rgba(242, 242, 242, 0.06)",
       watchlist: [],
@@ -78,7 +80,7 @@ function TradingViewWidget({ symbol = "NASDAQ:AAPL" }: TradingViewWidgetProps) {
         scriptRef.current = null;
       }
     };
-  }, [symbol]);
+  }, [symbol, isDark]);
 
   return (
     <div
@@ -98,10 +100,11 @@ function TradingViewWidget({ symbol = "NASDAQ:AAPL" }: TradingViewWidgetProps) {
           )}/`}
           rel="noopener nofollow"
           target="_blank"
+          className="dark:text-blue-400"
         >
-          <span className="blue-text">{symbol} stock chart</span>
+          <span className="blue-text dark:text-blue-400">{symbol} stock chart</span>
         </a>
-        <span className="trademark"> by TradingView</span>
+        <span className="trademark dark:text-slate-400"> by TradingView</span>
       </div>
     </div>
   );

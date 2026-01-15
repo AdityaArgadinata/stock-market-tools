@@ -266,7 +266,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
   if (loading) {
     return (
       <div className="loading flex justify-center items-center h-screen">
-        <div>Memuat data</div>
+        <div className="dark:text-slate-300">Memuat data</div>
       </div>
     );
   }
@@ -275,13 +275,13 @@ const StockData = ({ symbol, token }: StockDataProps) => {
     return (
       <div className="error flex justify-center items-center h-screen">
         <div className="error-icon">⚠️</div>
-        <div>{error}</div>
+        <div className="dark:text-slate-300">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="w-md stock-data bg-white p-4 rounded-md shadow-md border border-gray-200">
+    <div className="w-md stock-data bg-white dark:bg-slate-800 p-4 rounded-md shadow-md border border-gray-200 dark:border-slate-700">
       <div className="stock-data-filters flex flex-col gap-2 mb-4">
         <div className="date-picker-group flex justify-start items-center gap-2">
           <div className="date-input-group flex flex-col gap-1">
@@ -290,17 +290,17 @@ const StockData = ({ symbol, token }: StockDataProps) => {
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="date-input p-2 text-sm border border-gray-300 rounded-md"
+              className="date-input p-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
-          <span className="text-lg">→</span>
+          <span className="text-lg dark:text-slate-300">→</span>
           <div className="date-input-group flex flex-col gap-1">
             <input
               id="dateTo"
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="date-input p-2 text-sm border border-gray-300 rounded-md"
+              className="date-input p-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
         </div>
@@ -309,14 +309,14 @@ const StockData = ({ symbol, token }: StockDataProps) => {
           <button
             type="button"
             onClick={handleDatePrev}
-            className="date-nav-button p-2 text-sm font-medium border border-gray-300 rounded-md"
+            className="date-nav-button p-2 text-sm font-medium border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           >
             ← Prev
           </button>
           <button
             type="button"
             onClick={handleDateNext}
-            className="date-nav-button p-2 text-sm font-medium border border-gray-300 rounded-md"
+            className="date-nav-button p-2 text-sm font-medium border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           >
             Next →
           </button>
@@ -326,7 +326,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
           <select
             value={investorType}
             onChange={(e) => setInvestorType(e.target.value)}
-            className="filter-select p-2 text-sm border border-gray-300 rounded-md"
+            className="filter-select p-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
           >
             <option value="INVESTOR_TYPE_ALL">All Investor</option>
             <option value="INVESTOR_TYPE_FOREIGN">Asing</option>
@@ -336,7 +336,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
           <select
             value={transactionType}
             onChange={(e) => setTransactionType(e.target.value)}
-            className="filter-select p-2 text-sm border border-gray-300 rounded-md"
+            className="filter-select p-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
           >
             <option value="TRANSACTION_TYPE_NET">Net</option>
             <option value="TRANSACTION_TYPE_BUY">Buy</option>
@@ -347,7 +347,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
 
       {tableRows.length === 0 ? (
         <div className="w-md flex justify-center items-center mt-52">
-          <div>Tidak ada data tersedia</div>
+          <div className="dark:text-slate-300">Tidak ada data tersedia</div>
         </div>
       ) : (
         <div className="table-container overflow-x-auto">

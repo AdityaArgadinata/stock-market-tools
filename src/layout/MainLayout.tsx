@@ -8,7 +8,6 @@ import {
   Bell,
   PieChart,
   LogOut,
-  Moon,
   Search,
   ListStart,
   ChartCandlestick,
@@ -38,17 +37,17 @@ export default function MainLayout() {
   }, []);
 
   return (
-    <div  >
+    <div className="dark:bg-slate-900 min-h-screen">
       {/* Sidebar */}
-      <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-r flex flex-col">
+      <aside className="fixed top-0 left-0 h-screen w-64 bg-white dark:bg-slate-800 border-r dark:border-slate-700 flex flex-col transition-colors">
         {/* Profile */}
         <div className="flex items-center gap-3 p-4">
-          <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-xl bg-emerald-600 dark:bg-emerald-500 text-white flex items-center justify-center font-bold">
             CL
           </div>
           <div>
-            <p className="font-semibold leading-none">Stockcoy</p>
-            <span className="text-xs text-gray-500">
+            <p className="font-semibold leading-none dark:text-slate-100">Stockcoy</p>
+            <span className="text-xs text-gray-500 dark:text-slate-400">
               Identifier Market
             </span>
           </div>
@@ -63,9 +62,9 @@ export default function MainLayout() {
               setSymbol(inputSymbol.toUpperCase());
               searchInputRef.current?.blur();
             }}
-            className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
+            className="flex items-center gap-2 bg-gray-100 dark:bg-slate-700 px-3 py-2 rounded-lg"
           >
-            <Search size={16} className="text-gray-400" />
+            <Search size={16} className="text-gray-400 dark:text-slate-400" />
             <input
               ref={searchInputRef}
               value={inputSymbol}
@@ -74,7 +73,7 @@ export default function MainLayout() {
               }
               onFocus={(e) => e.target.select()}
               placeholder="Search ticker..."
-              className="bg-transparent outline-none text-sm w-full"
+              className="bg-transparent outline-none text-sm w-full dark:text-slate-100 dark:placeholder-slate-400"
             />
           </form>
         </div>
@@ -109,24 +108,16 @@ export default function MainLayout() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t p-3 space-y-3">
-          <button className="flex items-center gap-3 text-gray-600 hover:text-red-500 w-full px-3 py-2">
+        <div className="border-t dark:border-slate-700 p-3">
+          <button className="flex items-center gap-3 text-gray-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 w-full px-3 py-2 transition-colors">
             <LogOut size={18} />
             Logout
           </button>
-
-          <div className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Moon size={16} />
-              Dark Mode
-            </div>
-            <input type="checkbox" className="toggle toggle-sm" />
-          </div>
         </div>
       </aside>
 
       {/* Content */}
-      <main className="ml-64 min-h-screen bg-gray-50 p-6">
+      <main className="ml-64 min-h-screen bg-gray-50 dark:bg-slate-900 p-6 transition-colors">
         <Outlet />
       </main>
     </div>
@@ -149,8 +140,8 @@ function MenuLink({
         `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition
         ${
           isActive
-            ? "bg-emerald-600 text-white"
-            : "text-gray-600 hover:bg-gray-100"
+            ? "bg-emerald-600 dark:bg-emerald-500 text-white"
+            : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
         }`
       }
     >

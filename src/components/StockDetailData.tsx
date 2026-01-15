@@ -104,7 +104,7 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
   if (loading && !data) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="text-lg">Loading stock details...</div>
+        <div className="text-lg dark:text-slate-300">Loading stock details...</div>
       </div>
     );
   }
@@ -112,7 +112,7 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
   if (error) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="text-lg text-red-500">Error: {error}</div>
+        <div className="text-lg text-red-500 dark:text-red-400">Error: {error}</div>
       </div>
     );
   }
@@ -120,7 +120,7 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
   if (!data) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="text-lg">No data available</div>
+        <div className="text-lg dark:text-slate-300">No data available</div>
       </div>
     );
   }
@@ -129,22 +129,22 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
   const lotFormatted = data.volume ? formatCurrency(data.volume / 100) : "-";
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-2 max-w-md">
+    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2 max-w-md">
       {/* Header with stock name and price */}
-      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200">
-        <div className="bg-gray-900 text-white px-1.5 py-0.5 rounded font-bold text-xs">
+      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700">
+        <div className="bg-gray-900 dark:bg-slate-700 text-white px-1.5 py-0.5 rounded font-bold text-xs">
           {symbol}
         </div>
-        <div className="text-lg font-bold text-gray-900">
+        <div className="text-lg font-bold text-gray-900 dark:text-slate-100">
           {formatNumber(data.lastprice)}
         </div>
         <div
           className={`text-xs font-semibold ${
             data.change > 0
-              ? "text-green-600"
+              ? "text-green-600 dark:text-emerald-400"
               : data.change < 0
-              ? "text-red-600"
-              : "text-gray-600"
+              ? "text-red-600 dark:text-red-400"
+              : "text-gray-600 dark:text-slate-400"
           }`}
         >
           {data.change > 0 ? "+" : ""}
@@ -157,65 +157,65 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
       <div className="grid grid-cols-3 gap-x-3 gap-y-1.5 text-xs">
         {/* Left column */}
         <div className="flex justify-between">
-          <span className="text-gray-600">Open</span>
-          <span className="font-semibold text-green-600">
+          <span className="text-gray-600 dark:text-slate-400">Open</span>
+          <span className="font-semibold text-green-600 dark:text-emerald-400">
             {data.open ? formatNumber(data.open) : formatNumber(data.close)}
           </span>
         </div>
         
         {/* Middle column */}
         <div className="flex justify-between">
-          <span className="text-gray-600">Prev</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-slate-400">Prev</span>
+          <span className="font-semibold text-gray-900 dark:text-slate-100">
             {formatNumber(data.close)}
           </span>
         </div>
         
         {/* Right column */}
         <div className="flex justify-between">
-          <span className="text-gray-600">Lot</span>
-          <span className="font-semibold text-green-600">{lotFormatted}</span>
+          <span className="text-gray-600 dark:text-slate-400">Lot</span>
+          <span className="font-semibold text-green-600 dark:text-emerald-400">{lotFormatted}</span>
         </div>
 
         {/* Row 2 */}
         <div className="flex justify-between">
-          <span className="text-gray-600">High</span>
-          <span className="font-semibold text-green-600">
+          <span className="text-gray-600 dark:text-slate-400">High</span>
+          <span className="font-semibold text-green-600 dark:text-emerald-400">
             {formatNumber(data.high)}
           </span>
         </div>
         
         <div className="flex justify-between">
-          <span className="text-gray-600">Freq</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-slate-400">Freq</span>
+          <span className="font-semibold text-gray-900 dark:text-slate-100">
             {formatNumber(data.frequency)}
           </span>
         </div>
         
         <div className="flex justify-between">
-          <span className="text-gray-600">Val</span>
-          <span className="font-semibold text-green-600">
+          <span className="text-gray-600 dark:text-slate-400">Val</span>
+          <span className="font-semibold text-green-600 dark:text-emerald-400">
             {data.value ? formatCurrency(data.value) : "-"}
           </span>
         </div>
 
         {/* Row 3 */}
         <div className="flex justify-between">
-          <span className="text-gray-600">Low</span>
-          <span className="font-semibold text-red-600">
+          <span className="text-gray-600 dark:text-slate-400">Low</span>
+          <span className="font-semibold text-red-600 dark:text-red-400">
             {formatNumber(data.low)}
           </span>
         </div>
         
         <div className="flex justify-between">
-          <span className="text-gray-600">F.Net</span>
+          <span className="text-gray-600 dark:text-slate-400">F.Net</span>
           <span
             className={`font-semibold ${
               data.fnet > 0
-                ? "text-green-600"
+                ? "text-green-600 dark:text-emerald-400"
                 : data.fnet < 0
-                ? "text-red-600"
-                : "text-gray-600"
+                ? "text-red-600 dark:text-red-400"
+                : "text-gray-600 dark:text-slate-400"
             }`}
           >
             {formatCurrency(data.fnet)}
@@ -223,8 +223,8 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
         </div>
         
         <div className="flex justify-between">
-          <span className="text-gray-600">Avg</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-slate-400">Avg</span>
+          <span className="font-semibold text-gray-900 dark:text-slate-100">
             {data.average ? formatNumber(data.average) : formatNumber(data.lastprice)}
           </span>
         </div>
