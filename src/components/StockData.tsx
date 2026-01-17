@@ -321,7 +321,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
   const tableRows = processData();
 
   return (
-    <div className="w-md stock-data bg-white dark:bg-slate-800 p-4 rounded-md shadow-md border border-gray-200 dark:border-slate-700 relative">
+    <div className="stock-data bg-white dark:bg-slate-800 p-4 rounded-md shadow-md border border-gray-200 dark:border-slate-700 relative">
       {loading && (
         <div className="absolute inset-0 bg-slate-800 rounded-md flex justify-center items-center opacity-90">
           <div className="text-slate-300">Memuat data</div>

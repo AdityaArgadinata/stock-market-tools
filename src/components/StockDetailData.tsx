@@ -129,7 +129,7 @@ const StockDetailData = ({ symbol, token }: StockDetailDataProps) => {
   const lotFormatted = data.volume ? formatCurrency(data.volume / 100) : "-";
 
   return (
-    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2 max-w-md">
+    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2">
       {/* Header with stock name and price */}
       <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700">
         <div className="bg-gray-900 dark:bg-slate-700 text-white px-1.5 py-0.5 rounded font-bold text-xs">

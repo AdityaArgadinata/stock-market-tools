@@ -1,4 +1,4 @@
-import RunningTradeData from "../components/RunningTradeData";
+// import RunningTradeData from "../components/RunningTradeData";
 import StockDetailData from "../components/StockDetailData";
 import TradeBook from "../components/TradeBook";
 import { useStockSymbol } from "../context/StockSymbolContext";
@@ -10,12 +10,12 @@ export default function Volume() {
 
   return (
     <div className="pt-8 px-4">
-      <div className="flex gap-3 items-start">
+      <div className="">
         <div className="space-y-3">
           <StockDetailData symbol={symbol} token={BEARER_TOKEN} />
-          <RunningTradeData symbol={symbol} token={BEARER_TOKEN} />
+          {/* <RunningTradeData symbol={symbol} token={BEARER_TOKEN} /> */}
+          <TradeBook symbol={symbol} token={BEARER_TOKEN} />
         </div>
-        <TradeBook symbol={symbol} token={BEARER_TOKEN} />
       </div>
     </div>
   );

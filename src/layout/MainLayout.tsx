@@ -11,6 +11,7 @@ import {
   Search,
   ListStart,
   ChartCandlestick,
+  UserCheck,
 } from "lucide-react";
 
 export default function MainLayout() {
@@ -104,6 +105,11 @@ export default function MainLayout() {
             to="/analytics"
             icon={<PieChart size={18} />}
             label="Analytics"
+          />
+          <MenuLink
+            to="/insider"
+            icon={<UserCheck size={18} />}
+            label="Insider"
           />
         </nav>
 

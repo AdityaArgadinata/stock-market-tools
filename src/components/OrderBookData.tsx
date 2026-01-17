@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import RunningTradeData from "./RunningTradeData";
+// import RunningTradeData from "./RunningTradeData";
 
-const BEARER_TOKEN = import.meta.env.VITE_STOCKBIT_BEARER_TOKEN;
+// const BEARER_TOKEN = import.meta.env.VITE_STOCKBIT_BEARER_TOKEN;
 
 /* ================= TYPES ================= */
 interface OrderBookItem {
@@ -318,7 +318,7 @@ export default function OrderBookData({ symbol, token }: OrderBookProps) {
               </div>
             </div>
           </div>
-          <RunningTradeData symbol={symbol} token={BEARER_TOKEN} />
+          {/* <RunningTradeData symbol={symbol} token={BEARER_TOKEN} /> */}
         </div>
       </div>
     </div>
