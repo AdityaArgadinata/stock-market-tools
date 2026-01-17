@@ -60,8 +60,10 @@ const StockData = ({ symbol, token }: StockDataProps) => {
   const getTodayDate = () => {
     return new Date().toISOString().split("T")[0];
   };
+  
   const [dateFrom, setDateFrom] = useState(getTodayDate());
   const [dateTo, setDateTo] = useState(getTodayDate());
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Date navigation functions
   const handleDatePrev = () => {
@@ -86,8 +88,63 @@ const StockData = ({ symbol, token }: StockDataProps) => {
     setDateTo(toDate.toISOString().split("T")[0]);
   };
 
+  // Find latest date with data
+  const findLatestDateWithData = async (startDate: string) => {
+    let currentDate = new Date(startDate);
+    let foundData = false;
+    let attempts = 0;
+    const maxAttempts = 30; // Try up to 30 days back
+
+    while (!foundData && attempts < maxAttempts) {
+      const dateStr = currentDate.toISOString().split("T")[0];
+      attempts++;
+
+      try {
+        const url = `https://exodus.stockbit.com/marketdetectors/${symbol}?from=${dateStr}&to=${dateStr}&transaction_type=${transactionType}&market_board=MARKET_BOARD_REGULER&investor_type=${investorType}&limit=25`;
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const brokerSummary = result?.data?.broker_summary || result?.broker_summary;
+          const hasBrokerData = brokerSummary?.brokers_buy?.length > 0 || brokerSummary?.brokers_sell?.length > 0;
+
+          if (hasBrokerData) {
+            foundData = true;
+            return dateStr;
+          }
+        }
+      } catch (err) {
+        console.log(`Error checking date ${dateStr}:`, err);
+      }
+
+      // Try previous day
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    return startDate; // Return original date if nothing found
+  };
+
   useEffect(() => {
     if (!symbol) return;
+
+    // Initialize: find latest date with data
+    if (!isInitialized) {
+      const initializeDate = async () => {
+        const latestDate = await findLatestDateWithData(getTodayDate());
+        setDateFrom(latestDate);
+        setDateTo(latestDate);
+        setIsInitialized(true);
+      };
+
+      initializeDate();
+      return;
+    }
 
     const fetchData = async () => {
       setLoading(true);
@@ -122,7 +179,7 @@ const StockData = ({ symbol, token }: StockDataProps) => {
     };
 
     fetchData();
-  }, [symbol, token, investorType, transactionType, dateFrom, dateTo]);
+  }, [symbol, token, investorType, transactionType, dateFrom, dateTo, isInitialized]);
 
   const formatNumber = (num: number): string => {
     if (num === 0) return "0";
@@ -308,6 +365,16 @@ const StockData = ({ symbol, token }: StockDataProps) => {
           >
             Next →
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              setDateFrom(getTodayDate());
+              setDateTo(getTodayDate());
+            }}
+            className="date-nav-button p-2 text-sm font-medium border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+          >
+            Clear
+          </button>
         </div>
 
         <div className="filter-group flex gap-2 flex-wrap">
@@ -334,11 +401,11 @@ const StockData = ({ symbol, token }: StockDataProps) => {
       </div>
 
       {tableRows.length === 0 ? (
-        <div className="w-md flex justify-center items-center mt-52">
+        <div className="w-md flex h-full justify-center items-center">
           <div className="dark:text-slate-300">{error ? error : "Tidak ada data tersedia"}</div>
         </div>
       ) : (
-        <div className="table-container overflow-x-auto">
+        <div className="table-container h-full overflow-x-auto">
           <table className="stock-table w-full border-collapse">
             <thead>
               <tr>

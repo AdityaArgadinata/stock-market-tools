@@ -10,7 +10,7 @@ export default function Volume() {
 
   return (
     <div className="pt-8 px-4">
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-start">
         <div className="space-y-3">
           <StockDetailData symbol={symbol} token={BEARER_TOKEN} />
           <RunningTradeData symbol={symbol} token={BEARER_TOKEN} />

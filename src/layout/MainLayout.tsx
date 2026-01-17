@@ -140,7 +140,7 @@ function MenuLink({
         `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition
         ${
           isActive
-            ? "bg-emerald-600 dark:bg-emerald-500 text-white"
+            ? "bg-emerald-600 dark:bg-emerald-800 text-white"
             : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
         }`
       }

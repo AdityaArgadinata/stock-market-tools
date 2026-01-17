@@ -77,6 +77,7 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"chart" | "price" | "time">("time");
   const [timeInterval, setTimeInterval] = useState("10m");
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     if (!symbol) return;
@@ -86,8 +87,14 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
       setError(null);
 
       try {
-        const groupByParam = viewMode === "price" ? "GROUP_BY_PRICE" : "GROUP_BY_TIME";
-        const url = `https://exodus.stockbit.com/order-trade/trade-book?symbol=${symbol}&group_by=${groupByParam}&time_interval=${timeInterval}`;
+        const groupByParam =
+          viewMode === "price" ? "GROUP_BY_PRICE" : "GROUP_BY_TIME";
+        let url = `https://exodus.stockbit.com/order-trade/trade-book?symbol=${symbol}&group_by=${groupByParam}&time_interval=${timeInterval}`;
+
+        // Add date parameter if selected
+        if (selectedDate) {
+          url += `&date=${selectedDate}`;
+        }
 
         console.log("Fetching URL:", url);
 
@@ -114,7 +121,7 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
     };
 
     fetchData();
-  }, [symbol, token, timeInterval, viewMode]);
+  }, [symbol, token, timeInterval, viewMode, selectedDate]);
 
   const parsePercentage = (percentage: string): number => {
     const num = parseInt(percentage.replace("%", ""));
@@ -124,6 +131,18 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
   const parseLot = (lot: string): number => {
     if (lot === "-" || !lot) return 0;
     return parseInt(lot.replace(/,/g, "")) || 0;
+  };
+
+  const handlePrevDate = () => {
+    const currentDate = selectedDate ? new Date(selectedDate) : new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    setSelectedDate(currentDate.toISOString().split("T")[0]);
+  };
+
+  const handleNextDate = () => {
+    const currentDate = selectedDate ? new Date(selectedDate) : new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    setSelectedDate(currentDate.toISOString().split("T")[0]);
   };
 
   const prepareChartData = () => {
@@ -204,6 +223,40 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
             </button>
           </div>
         </div>
+        <div className="date-picker-group flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handlePrevDate}
+            className="px-3 py-2 text-sm font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-md border border-gray-300 dark:border-slate-600"
+            title="Previous day"
+          >
+            ←
+          </button>
+          <input
+            type="date"
+            id="trade-date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="button"
+            onClick={handleNextDate}
+            className="px-3 py-2 text-sm font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-md border border-gray-300 dark:border-slate-600"
+            title="Next day"
+          >
+            →
+          </button>
+          {selectedDate && (
+            <button
+              type="button"
+              onClick={() => setSelectedDate("")}
+              className="date-nav-button p-2 text-sm font-medium border border-gray-300 dark:border-slate-600 rounded-md dark:bg-slate-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {!data || data.data.book.length === 0 ? (
@@ -243,7 +296,7 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
                       borderRadius: "6px",
                       color: "#e2e8f0",
                     }}
-                    formatter={(value: number | undefined) => 
+                    formatter={(value: number | undefined) =>
                       value ? value.toLocaleString("id-ID") : "0"
                     }
                   />
@@ -365,141 +418,143 @@ const TradeBook = ({ symbol, token }: TradeBookProps) => {
 
           {viewMode === "time" && (
             <div className="table-container overflow-x-auto">
-          <table className="trade-book-table w-full border-collapse">
-            <thead>
-              <tr className="border-b border-gray-200 dark:border-slate-700">
-                <th className="p-2 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Time
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
-                  Buy Lot
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
-                  B.Freq
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
-                  %Buy
-                </th>
-                <th className="p-2 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Chart
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
-                  %Sell
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
-                  S.Freq
-                </th>
-                <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
-                  Sell Lot
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.book.map((item, index) => {
-                const buyPercent = parsePercentage(item.buy.percentage);
-                const sellPercent = parsePercentage(item.sell.percentage);
-
-                return (
-                  <tr
-                    key={index}
-                    className="border-b border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700"
-                  >
-                    <td className="p-2 text-sm text-slate-800 dark:text-slate-300">
-                      {item.time}
-                    </td>
-                    <td className="p-2 text-sm text-right text-teal-600 dark:text-teal-400 font-medium">
-                      {item.buy.lot}
-                    </td>
-                    <td className="p-2 text-sm text-right text-slate-700 dark:text-violet-400">
-                      {item.buy.frequency}
-                    </td>
-                    <td className="p-2 text-sm text-right text-slate-700 dark:text-slate-300 font-bold">
-                      {item.buy.percentage}
-                    </td>
-                    <td className="p-2">
-                      <div className="flex items-center gap-1 w-full">
-                        {buyPercent > 0 && (
-                          <div
-                            className="h-4 bg-teal-500 rounded-l"
-                            style={{ width: `${buyPercent}%` }}
-                          ></div>
-                        )}
-                        {sellPercent > 0 && (
-                          <div
-                            className="h-4 bg-red-500 rounded-r"
-                            style={{ width: `${sellPercent}%` }}
-                          ></div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-2 text-sm text-right text-slate-700 dark:text-slate-300 font-bold">
-                      {item.sell.percentage}
-                    </td>
-                    <td className="p-2 text-sm text-right text-slate-700 dark:text-violet-400">
-                      {item.sell.frequency}
-                    </td>
-                    <td className="p-2 text-sm text-right text-red-600 dark:text-red-400 font-medium">
-                      {item.sell.lot}
-                    </td>
+              <table className="trade-book-table w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-slate-700">
+                    <th className="p-2 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">
+                      Time
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
+                      Buy Lot
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
+                      B.Freq
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-teal-600 dark:text-teal-400">
+                      %Buy
+                    </th>
+                    <th className="p-2 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">
+                      Chart
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
+                      %Sell
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
+                      S.Freq
+                    </th>
+                    <th className="p-2 text-right text-sm font-semibold text-red-600 dark:text-red-400">
+                      Sell Lot
+                    </th>
                   </tr>
-                );
-              })}
+                </thead>
+                <tbody>
+                  {data.data.book.map((item, index) => {
+                    const buyPercent = parsePercentage(item.buy.percentage);
+                    const sellPercent = parsePercentage(item.sell.percentage);
 
-              {/* Total Row */}
-              {data.data.book_total && (
-                <tr className="border-t-2 border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 font-bold">
-                  <td className="p-2 text-sm text-slate-800 dark:text-slate-300">
-                    Total
-                  </td>
-                  <td className="p-2 text-sm text-right text-teal-600 dark:text-teal-400">
-                    {data.data.book_total.buy_lot}
-                  </td>
-                  <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
-                    {data.data.book_total.buy_frequency}
-                  </td>
-                  <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
-                    {data.data.book_total.buy_percentage}
-                  </td>
-                  <td className="p-2">
-                    <div className="flex items-center gap-1 w-full">
-                      {parsePercentage(data.data.book_total.buy_percentage) >
-                        0 && (
-                        <div
-                          className="h-4 bg-teal-500 rounded-l"
-                          style={{
-                            width: `${parsePercentage(
-                              data.data.book_total.buy_percentage
-                            )}%`,
-                          }}
-                        ></div>
-                      )}
-                      {parsePercentage(data.data.book_total.sell_percentage) >
-                        0 && (
-                        <div
-                          className="h-4 bg-red-500 rounded-r"
-                          style={{
-                            width: `${parsePercentage(
-                              data.data.book_total.sell_percentage
-                            )}%`,
-                          }}
-                        ></div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
-                    {data.data.book_total.sell_percentage}
-                  </td>
-                  <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
-                    {data.data.book_total.sell_frequency}
-                  </td>
-                  <td className="p-2 text-sm text-right text-red-600 dark:text-red-400">
-                    {data.data.book_total.sell_lot}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          </div>
+                    return (
+                      <tr
+                        key={index}
+                        className="border-b border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700"
+                      >
+                        <td className="p-2 text-sm text-slate-800 dark:text-slate-300">
+                          {item.time}
+                        </td>
+                        <td className="p-2 text-sm text-right text-teal-600 dark:text-teal-400 font-medium">
+                          {item.buy.lot}
+                        </td>
+                        <td className="p-2 text-sm text-right text-slate-700 dark:text-violet-400">
+                          {item.buy.frequency}
+                        </td>
+                        <td className="p-2 text-sm text-right text-slate-700 dark:text-slate-300 font-bold">
+                          {item.buy.percentage}
+                        </td>
+                        <td className="p-2">
+                          <div className="flex items-center gap-1 w-full">
+                            {buyPercent > 0 && (
+                              <div
+                                className="h-4 bg-teal-500 rounded-l"
+                                style={{ width: `${buyPercent}%` }}
+                              ></div>
+                            )}
+                            {sellPercent > 0 && (
+                              <div
+                                className="h-4 bg-red-500 rounded-r"
+                                style={{ width: `${sellPercent}%` }}
+                              ></div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-2 text-sm text-right text-slate-700 dark:text-slate-300 font-bold">
+                          {item.sell.percentage}
+                        </td>
+                        <td className="p-2 text-sm text-right text-slate-700 dark:text-violet-400">
+                          {item.sell.frequency}
+                        </td>
+                        <td className="p-2 text-sm text-right text-red-600 dark:text-red-400 font-medium">
+                          {item.sell.lot}
+                        </td>
+                      </tr>
+                    );
+                  })}
+
+                  {/* Total Row */}
+                  {data.data.book_total && (
+                    <tr className="border-t-2 border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 font-bold">
+                      <td className="p-2 text-sm text-slate-800 dark:text-slate-300">
+                        Total
+                      </td>
+                      <td className="p-2 text-sm text-right text-teal-600 dark:text-teal-400">
+                        {data.data.book_total.buy_lot}
+                      </td>
+                      <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
+                        {data.data.book_total.buy_frequency}
+                      </td>
+                      <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
+                        {data.data.book_total.buy_percentage}
+                      </td>
+                      <td className="p-2">
+                        <div className="flex items-center gap-1 w-full">
+                          {parsePercentage(
+                            data.data.book_total.buy_percentage
+                          ) > 0 && (
+                            <div
+                              className="h-4 bg-teal-500 rounded-l"
+                              style={{
+                                width: `${parsePercentage(
+                                  data.data.book_total.buy_percentage
+                                )}%`,
+                              }}
+                            ></div>
+                          )}
+                          {parsePercentage(
+                            data.data.book_total.sell_percentage
+                          ) > 0 && (
+                            <div
+                              className="h-4 bg-red-500 rounded-r"
+                              style={{
+                                width: `${parsePercentage(
+                                  data.data.book_total.sell_percentage
+                                )}%`,
+                              }}
+                            ></div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
+                        {data.data.book_total.sell_percentage}
+                      </td>
+                      <td className="p-2 text-sm text-right text-slate-800 dark:text-slate-300">
+                        {data.data.book_total.sell_frequency}
+                      </td>
+                      <td className="p-2 text-sm text-right text-red-600 dark:text-red-400">
+                        {data.data.book_total.sell_lot}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </>
       )}
